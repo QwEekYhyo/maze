@@ -17,6 +17,6 @@ class maze {
 
         void generate();
         std::pair<int, int> get_pos() const;
-}
+};
 
 #endif

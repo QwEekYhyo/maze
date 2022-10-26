@@ -1,11 +1,11 @@
 #include "maze.hpp"
 #include <iostream>
 
-maze::maze(size_t size) {
+maze::maze(std::size_t size) {
     m_size = size;
-    generate();
+    std::cout << m_size << std::endl;
+    //generate();
 }
 
-maze::generate() {
-    std::cout << m_size << std::endl;
-}
+//void maze::generate() {
+//}

@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Logan
+test.cpp
+test

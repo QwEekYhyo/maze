@@ -6,7 +6,7 @@
 
 class maze {
     public:
-        maze();
+        maze(std::size_t size);
         void print() const;
         void move(const std::pair<int, int>& position);
 

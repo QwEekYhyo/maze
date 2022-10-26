@@ -4,13 +4,14 @@
 #include <vector>
 #include <utility>
 #include <string>
+#include <iostream>
 
 class maze {
     public:
         maze(std::size_t size);
-        void print() const;
         void move(const std::pair<int, int>& position);
         std::pair<int, int> get_pos() const;
+        friend std::ostream& operator<<(std::ostream& os, const maze& m);
 
     private:
         std::size_t m_size;

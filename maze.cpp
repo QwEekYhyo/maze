@@ -1,5 +1,4 @@
 #include "maze.hpp"
-#include <iostream>
 
 maze::maze(std::size_t size) {
     m_size = size;
@@ -34,4 +33,16 @@ void maze::move(const std::pair<int, int>& pos) {
     else {
         m_message = "Couldn't move";
     }
+}
+
+std::ostream& operator<<(std::ostream& os, const maze& m) {
+    std::string output;
+    for (int i = 0; i < m.m_size; i++) {
+        for (int j = 0; j < m.m_size; j++) {
+            output.push_back(std::to_string(m.m_matrix[i][j])[0]);
+            output.push_back(' ');
+        }
+        output.push_back('\n');
+    }
+    return (os << output);
 }

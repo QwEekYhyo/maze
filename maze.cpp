@@ -44,5 +44,6 @@ std::ostream& operator<<(std::ostream& os, const maze& m) {
         }
         output.push_back('\n');
     }
+    output += m.m_message;
     return (os << output);
 }

@@ -37,7 +37,7 @@ void maze::move(const coordinates& pos) {
         m_pos = temp;
     }
     else {
-        m_message = "Couldn't move";
+        m_message = "Couldn't move\n";
     }
     update();
 }

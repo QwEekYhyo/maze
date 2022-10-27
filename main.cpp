@@ -1,15 +1,18 @@
 #include "maze.hpp"
-#include <cstdio>
 
 int main(void) {
     maze m(0);
-    FILE* flux = stdin;
-    char ch = ' ';
+    char ch;
+    std::string s;
 
     m.update();
     while (true) {
-        ch = getc(flux);
-        if (ch == EOF) {
+        std::getline(std::cin, s);
+        if (!s.empty()) {
+            ch = s[0];
+        }
+
+        if (ch == 'k' || ch == EOF) {
             return 0;
         } else if (ch == 'z'){
             m.move({0, -1});

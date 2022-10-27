@@ -36,14 +36,13 @@ void maze::move(const std::pair<int, int>& pos) {
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {
-    std::string output;
     for (int i = 0; i < m.m_size; i++) {
         for (int j = 0; j < m.m_size; j++) {
-            output.push_back(std::to_string(m.m_matrix[i][j])[0]);
-            output.push_back(' ');
+            os << m.m_matrix[i][j];
+            os << ' ';
         }
-        output.push_back('\n');
+        os << '\n';
     }
-    output += m.m_message;
-    return (os << output);
+    os << m.m_message;
+    return os;
 }

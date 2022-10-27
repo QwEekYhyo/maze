@@ -35,6 +35,10 @@ void maze::move(const coordinates& pos) {
     }
 }
 
+int& maze::operator[](coordinates pos) {
+    return m_matrix[pos.y][pos.x];
+}
+
 std::ostream& operator<<(std::ostream& os, const maze& m) {
     for (int i = 0; i < m.m_size; i++) {
         for (int j = 0; j < m.m_size; j++) {

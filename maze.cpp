@@ -23,18 +23,23 @@ void maze::generate() {
     m_size = m_matrix[0].size();
 }
 
+bool maze::contains(const coordinates& c) {
+    return (c.x < m_size && c.x >= 0 && c.y < m_size && c.y >= 0);
+}
+
 const coordinates& maze::get_pos() const {
     return m_pos;
 }
 
 void maze::move(const coordinates& pos) {
     coordinates temp = {m_pos.x + pos.x, m_pos.y + pos.y};
-    if (at({temp.x, temp.y})) {
+    if (contains(temp) && at(temp)) {
         m_pos = temp;
     }
     else {
         m_message = "Couldn't move";
     }
+    update();
 }
 
 int& maze::at(coordinates pos) {
@@ -46,7 +51,12 @@ const int& maze::at(coordinates pos) const {
 }
 
 int& maze::operator[](coordinates pos) {
-    return at({pos.x, pos.y});
+    return at(pos);
+}
+
+void maze::update() {
+    std::cout << (*this) << std::endl;
+    m_message = '\n';
 }
 
 bool operator==(const coordinates& a, const coordinates& b) {
@@ -54,8 +64,8 @@ bool operator==(const coordinates& a, const coordinates& b) {
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {
-    for (std::size_t i = 0; i < m.m_size; i++) {
-        for (std::size_t j = 0; j < m.m_size; j++) {
+    for (int i = 0; i < m.m_size; i++) {
+        for (int j = 0; j < m.m_size; j++) {
             coordinates c = {j, i};
             if (m.get_pos() == c) {
                 os << '*';

@@ -6,7 +6,7 @@
 #include <iostream>
 
 struct coordinates {
-    std::size_t x, y;
+    int x, y;
     friend bool operator==(const coordinates& a, const coordinates& b);
 };
 
@@ -15,9 +15,12 @@ class maze {
         explicit maze(std::size_t size);
         void move(const coordinates& position);
         const coordinates& get_pos() const;
+        void update();
+
         int& at(coordinates c);
         const int& at(coordinates c) const;
         int& operator[](coordinates c);
+
         friend std::ostream& operator<<(std::ostream& os, const maze& m);
 
     private:
@@ -27,6 +30,7 @@ class maze {
         std::string m_message;
 
         void generate();
+        bool contains(const coordinates& c);
 };
 
 #endif

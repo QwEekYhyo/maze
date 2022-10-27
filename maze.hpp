@@ -7,6 +7,7 @@
 
 struct coordinates {
     std::size_t x, y;
+    friend bool operator==(const coordinates& a, const coordinates& b);
 };
 
 class maze {

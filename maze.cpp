@@ -49,10 +49,19 @@ int& maze::operator[](coordinates pos) {
     return at({pos.x, pos.y});
 }
 
+bool operator==(const coordinates& a, const coordinates& b) {
+    return a.x == b.x && a.y == b.y;
+}
+
 std::ostream& operator<<(std::ostream& os, const maze& m) {
     for (std::size_t i = 0; i < m.m_size; i++) {
         for (std::size_t j = 0; j < m.m_size; j++) {
-            os << m.at({j, i});
+            coordinates c = {j, i};
+            if (m.get_pos() == c) {
+                os << '*';
+            } else {
+                os << m.at(c);
+            }
             os << ' ';
         }
         os << '\n';

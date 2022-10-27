@@ -23,7 +23,9 @@ void maze::generate() {
     m_size = m_matrix[0].size();
 }
 
-const coordinates& maze::get_pos() const {return m_pos;}
+const coordinates& maze::get_pos() const {
+    return m_pos;
+}
 
 void maze::move(const coordinates& pos) {
     coordinates temp = {m_pos.x + pos.x, m_pos.y + pos.y};
@@ -33,6 +35,14 @@ void maze::move(const coordinates& pos) {
     else {
         m_message = "Couldn't move";
     }
+}
+
+int& maze::at(coordinates pos) {
+    return m_matrix.at(pos.y).at(pos.x);
+}
+
+const int& maze::at(coordinates pos) const {
+    return m_matrix.at(pos.y).at(pos.x);
 }
 
 int& maze::operator[](coordinates pos) {

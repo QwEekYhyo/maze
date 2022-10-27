@@ -14,6 +14,8 @@ class maze {
         explicit maze(std::size_t size);
         void move(const coordinates& position);
         const coordinates& get_pos() const;
+        int& at(coordinates c);
+        const int& at(coordinates c) const;
         int& operator[](coordinates c);
         friend std::ostream& operator<<(std::ostream& os, const maze& m);
 

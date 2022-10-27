@@ -3,7 +3,7 @@
 maze::maze(std::size_t size) {
     m_size = size;
     generate();
-    m_pos = std::make_pair(0, 0);
+    m_pos = {0, 0};
 }
 
 void maze::generate() {
@@ -23,11 +23,11 @@ void maze::generate() {
     m_size = m_matrix[0].size();
 }
 
-std::pair<int, int> maze::get_pos() const {return m_pos;}
+const coordinates& maze::get_pos() const {return m_pos;}
 
-void maze::move(const std::pair<int, int>& pos) {
-    auto temp = std::make_pair(m_pos.first + pos.first, m_pos.second + pos.second);
-    if (m_matrix[temp.first][temp.second]) {
+void maze::move(const coordinates& pos) {
+    coordinates temp = {m_pos.x + pos.x, m_pos.y + pos.y};
+    if (m_matrix[temp.y][temp.x]) {
         m_pos = temp;
     }
     else {

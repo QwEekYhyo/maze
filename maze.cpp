@@ -29,7 +29,7 @@ const coordinates& maze::get_pos() const {
 
 void maze::move(const coordinates& pos) {
     coordinates temp = {m_pos.x + pos.x, m_pos.y + pos.y};
-    if (m_matrix[temp.y][temp.x]) {
+    if (at({temp.x, temp.y})) {
         m_pos = temp;
     }
     else {
@@ -46,13 +46,13 @@ const int& maze::at(coordinates pos) const {
 }
 
 int& maze::operator[](coordinates pos) {
-    return m_matrix[pos.y][pos.x];
+    return at({pos.x, pos.y});
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {
-    for (int i = 0; i < m.m_size; i++) {
-        for (int j = 0; j < m.m_size; j++) {
-            os << m.m_matrix[i][j];
+    for (std::size_t i = 0; i < m.m_size; i++) {
+        for (std::size_t j = 0; j < m.m_size; j++) {
+            os << m.at({j, i});
             os << ' ';
         }
         os << '\n';

@@ -1,4 +1,4 @@
-#include "maze.hpp"
+#include <maze.hpp>
 
 maze::maze(std::size_t size) {
     m_size = size;

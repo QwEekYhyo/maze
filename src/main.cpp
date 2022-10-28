@@ -1,4 +1,4 @@
-#include "maze.hpp"
+#include <maze.hpp>
 
 int main(void) {
     maze m(0);

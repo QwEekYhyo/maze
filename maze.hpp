@@ -7,6 +7,7 @@
 
 struct coordinates {
     int x, y;
+    bool visited = false;
     friend bool operator==(const coordinates& a, const coordinates& b);
 };
 
@@ -31,6 +32,8 @@ class maze {
 
         void generate();
         bool contains(const coordinates& c);
+        bool has_neighbor(const coordinates& c);
+        const coordinates& random_neighbor(const coordinates& c);
 };
 
 #endif

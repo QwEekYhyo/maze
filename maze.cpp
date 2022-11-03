@@ -1,12 +1,17 @@
 #include "maze.hpp"
+#include <cstdlib>
+#include <ctime>
+#include <deque>
 
 maze::maze(std::size_t size) {
     m_size = size;
     generate();
-    m_pos = {0, 0};
 }
 
 void maze::generate() {
+    std::srand(time(NULL));
+    std::deque<coordinates> stack;
+
     //not implemented yet so maze is hard coded
     m_matrix = {
         {1,1,1,1,1,0,0,1,1,1},
@@ -20,11 +25,50 @@ void maze::generate() {
         {1,1,1,1,1,0,0,1,1,1},
         {0,0,1,0,0,1,1,0,0,1}
     };
-    m_size = m_matrix[0].size();
+
+    m_matrix = std::vector<std::vector<int>> (m_size, std::vector<int> (m_size, 1));
+    for (int i = 0; i < m_size; i++) {
+        for (int j = 0; j < m_size; j++) {
+            if ((i+j) %2) {
+                at({i, j}) = 0;
+            }
+        }
+    }
+    int random = 2 * (std::rand() % (m_size/2));
+    m_pos = {random, 0};
+    coordinates current = m_pos;
+    current.visited = true;
 }
 
 bool maze::contains(const coordinates& c) {
     return (c.x < m_size && c.x >= 0 && c.y < m_size && c.y >= 0);
+}
+
+bool maze::has_neighbor(const coordinates& c) {
+    std::vector<coordinates> possible_moves = {
+        {2, 0},
+        {-2, 0},
+        {0, 2},
+        {0, -2}
+    };
+    for (coordinates& c : possible_moves) {
+        if (contains(c) && ! c.visited) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const coordinates& maze::random_neighbor(const coordinates& pos) {
+    std::srand(time(NULL));
+    std::vector<coordinates> possible_moves = {
+        {2, 0},
+        {-2, 0},
+        {0, 2},
+        {0, -2}
+    };
+    while (true) {
+    }
 }
 
 const coordinates& maze::get_pos() const {

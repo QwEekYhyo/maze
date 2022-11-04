@@ -3,6 +3,12 @@
 #include <ctime>
 #include <deque>
 
+std::size_t coordinates::HashFunction::operator()(const coordinates& c) const noexcept {
+    size_t xHash = std::hash<int>()(c.x);
+    size_t yHash = std::hash<int>()(c.y) << 1;
+    return xHash ^ yHash;
+}
+
 maze::maze(std::size_t size) {
     m_size = size;
     generate();
@@ -11,6 +17,9 @@ maze::maze(std::size_t size) {
 void maze::generate() {
     std::srand(time(NULL));
     std::deque<coordinates> stack;
+    coordinates current;
+    coordinates next;
+    coordinates wall;
 
     //not implemented yet so maze is hard coded
     m_matrix = {
@@ -36,39 +45,64 @@ void maze::generate() {
     }
     int random = 2 * (std::rand() % (m_size/2));
     m_pos = {random, 0};
-    coordinates current = m_pos;
-    current.visited = true;
+    m_visited_cells.insert(m_pos);
+    stack.push_back(m_pos);
+    while (! stack.empty()) {
+        current = stack.back();
+        stack.pop_back();
+        if (has_neighbor(current)) {
+            stack.push_back(current);
+            next = random_neighbor(current);
+            wall = next + current;
+            wall = {wall.x / 2, wall.y / 2};
+            at(wall) = 1;
+            m_visited_cells.insert(next);
+            stack.push_back(next);
+        }
+    }
 }
 
 bool maze::contains(const coordinates& c) {
     return (c.x < m_size && c.x >= 0 && c.y < m_size && c.y >= 0);
 }
 
-bool maze::has_neighbor(const coordinates& c) {
+bool maze::has_neighbor(const coordinates& pos) {
     std::vector<coordinates> possible_moves = {
         {2, 0},
         {-2, 0},
         {0, 2},
         {0, -2}
     };
+    coordinates temp;
+
     for (coordinates& c : possible_moves) {
-        if (contains(c) && ! c.visited) {
+        temp = c + pos;
+        if (contains(temp) && ! m_visited_cells.contains(temp)) {
             return true;
         }
     }
     return false;
 }
 
-const coordinates& maze::random_neighbor(const coordinates& pos) {
+const coordinates maze::random_neighbor(const coordinates& pos) {
     std::srand(time(NULL));
+    int random;
+    std::vector<coordinates> valid_neighbors;
     std::vector<coordinates> possible_moves = {
         {2, 0},
         {-2, 0},
         {0, 2},
         {0, -2}
     };
-    while (true) {
+    for (coordinates c : possible_moves) {
+        c = c + pos;
+        if (contains(c) && ! m_visited_cells.contains(c)) {
+            valid_neighbors.push_back(c);
+        }
     }
+
+    random = std::rand() % valid_neighbors.size();
+    return valid_neighbors.at(random);
 }
 
 const coordinates& maze::get_pos() const {
@@ -76,7 +110,7 @@ const coordinates& maze::get_pos() const {
 }
 
 void maze::move(const coordinates& pos) {
-    coordinates temp = {m_pos.x + pos.x, m_pos.y + pos.y};
+    coordinates temp = pos + m_pos;
     if (contains(temp) && at(temp)) {
         m_pos = temp;
     }
@@ -105,6 +139,10 @@ void maze::update() {
 
 bool operator==(const coordinates& a, const coordinates& b) {
     return a.x == b.x && a.y == b.y;
+}
+
+coordinates operator+(const coordinates& a, const coordinates& b) {
+    return {a.x + b.x, a.y + b.y};
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {

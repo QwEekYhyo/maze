@@ -4,11 +4,15 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <unordered_set>
 
 struct coordinates {
     int x, y;
-    bool visited = false;
     friend bool operator==(const coordinates& a, const coordinates& b);
+    friend coordinates operator+(const coordinates& a, const coordinates& b);
+    struct HashFunction {
+        std::size_t operator()(const coordinates& c) const noexcept;
+    };
 };
 
 class maze {
@@ -29,11 +33,12 @@ class maze {
         std::vector<std::vector<int>> m_matrix;
         coordinates m_pos;
         std::string m_message;
+        std::unordered_set<coordinates, coordinates::HashFunction> m_visited_cells;
 
         void generate();
         bool contains(const coordinates& c);
         bool has_neighbor(const coordinates& c);
-        const coordinates& random_neighbor(const coordinates& c);
+        const coordinates random_neighbor(const coordinates& c);
 };
 
 #endif

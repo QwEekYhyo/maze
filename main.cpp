@@ -1,7 +1,7 @@
 #include "maze.hpp"
 
 int main(void) {
-    maze m(21);
+    maze m(24);
     char ch;
     std::string s;
 

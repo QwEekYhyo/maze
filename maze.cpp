@@ -10,7 +10,7 @@ std::size_t coordinates::HashFunction::operator()(const coordinates& c) const no
 }
 
 maze::maze(std::size_t size) {
-    m_size = size;
+    m_size = (2 * size) + 1;
     generate();
 }
 
@@ -21,35 +21,19 @@ void maze::generate() {
     coordinates next;
     coordinates wall;
 
-    //not implemented yet so maze is hard coded
-    m_matrix = {
-        {1,1,1,1,1,0,0,1,1,1},
-        {0,1,1,1,1,1,0,1,0,1},
-        {0,0,1,0,1,1,1,0,0,1},
-        {1,0,1,1,1,0,1,1,0,1},
-        {0,0,0,1,0,0,0,1,0,1},
-        {1,0,1,1,1,0,0,1,1,0},
-        {0,0,0,0,1,0,0,1,0,1},
-        {0,1,1,1,1,1,1,1,0,0},
-        {1,1,1,1,1,0,0,1,1,1},
-        {0,0,1,0,0,1,1,0,0,1}
-    };
+    m_matrix = std::vector<std::vector<int>> (m_size, std::vector<int> (m_size, 0));
 
-    m_matrix = std::vector<std::vector<int>> (m_size, std::vector<int> (m_size, 1));
-    for (int i = 0; i < m_size; i++) {
-        for (int j = 0; j < m_size; j++) {
-            if ((i+j) %2) {
-                at({i, j}) = 0;
-            }
-        }
-    }
     int random = 2 * (std::rand() % (m_size/2));
     m_pos = {random, 0};
+
     m_visited_cells.insert(m_pos);
     stack.push_back(m_pos);
     while (! stack.empty()) {
         current = stack.back();
         stack.pop_back();
+        if (!at(current)) {
+            at(current) = 1;
+        }
         if (has_neighbor(current)) {
             stack.push_back(current);
             next = random_neighbor(current);

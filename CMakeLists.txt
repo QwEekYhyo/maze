@@ -15,3 +15,5 @@ include_directories(include)
 
 add_executable(maze ${SOURCES} ${HEADERS})
 target_link_libraries(maze sfml-graphics)
+
+install(TARGETS maze)

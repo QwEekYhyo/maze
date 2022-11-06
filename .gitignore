@@ -53,3 +53,6 @@ build
 # Logan
 test.cpp
 test
+
+build
+.vscode

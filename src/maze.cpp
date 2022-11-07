@@ -1,7 +1,14 @@
 #include <maze.hpp>
-#include <cstdlib>
-#include <ctime>
+#include <random>
 #include <deque>
+
+int rand_int(int a, int b) {
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(a,b);
+
+    return dist6(rng);
+}
 
 std::size_t coordinates::HashFunction::operator()(const coordinates& c) const noexcept {
     size_t xHash = std::hash<int>()(c.x);
@@ -15,7 +22,6 @@ maze::maze(std::size_t size) {
 }
 
 void maze::generate() {
-    std::srand(time(NULL));
     std::deque<coordinates> stack;
     coordinates current;
     coordinates next;
@@ -23,7 +29,7 @@ void maze::generate() {
 
     m_matrix = std::vector<std::vector<int>> (m_size, std::vector<int> (m_size, 0));
 
-    int random = 2 * (std::rand() % (m_size/2));
+    int random = 2 * rand_int(0, m_size/2);
     m_pos = {random, 0};
 
     m_visited_cells.insert(m_pos);
@@ -69,7 +75,6 @@ bool maze::has_neighbor(const coordinates& pos) {
 }
 
 const coordinates maze::random_neighbor(const coordinates& pos) {
-    std::srand(time(NULL));
     int random;
     std::vector<coordinates> valid_neighbors;
     std::vector<coordinates> possible_moves = {
@@ -85,7 +90,7 @@ const coordinates maze::random_neighbor(const coordinates& pos) {
         }
     }
 
-    random = std::rand() % valid_neighbors.size();
+    random = rand_int(0, valid_neighbors.size() - 1);
     return valid_neighbors.at(random);
 }
 

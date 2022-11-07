@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <unordered_set>
+#include <SFML/Graphics.hpp>
 
 struct coordinates {
     int x, y;
@@ -20,11 +21,14 @@ class maze {
         explicit maze(std::size_t size);
         void move(const coordinates& position);
         const coordinates& get_pos() const;
+        const std::size_t& size() const;
         void update();
 
         int& at(coordinates c);
         const int& at(coordinates c) const;
         int& operator[](coordinates c);
+
+        void draw_on_window(sf::RenderWindow& window);
 
         friend std::ostream& operator<<(std::ostream& os, const maze& m);
 

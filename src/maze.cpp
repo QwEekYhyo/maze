@@ -93,6 +93,10 @@ const coordinates& maze::get_pos() const {
     return m_pos;
 }
 
+const std::size_t& maze::size() const {
+    return m_size;
+}
+
 void maze::move(const coordinates& pos) {
     coordinates temp = pos + m_pos;
     if (contains(temp) && at(temp)) {
@@ -127,6 +131,32 @@ bool operator==(const coordinates& a, const coordinates& b) {
 
 coordinates operator+(const coordinates& a, const coordinates& b) {
     return {a.x + b.x, a.y + b.y};
+}
+
+void maze::draw_on_window(sf::RenderWindow& window) {
+    float cell_size = window.getSize().y/m_size;
+    std::vector<sf::RectangleShape> cells;
+    std::size_t cell_count = 0;
+    float x;
+    float y;
+
+    for (int i = 0; i < m_size; i++) {
+        for (int j = 0; j < m_size; j++) {
+            coordinates c = {j, i};
+            if (at(c)) {
+                x = j * cell_size;
+                y = i * cell_size;
+                cells.push_back(sf::RectangleShape(sf::Vector2f(cell_size, cell_size)));
+                if (get_pos() == c) {
+                    cells.at(cell_count).setFillColor(sf::Color::Green);
+                } else {
+                    cells.at(cell_count).setFillColor(sf::Color::Blue);
+                }
+                cells.at(cell_count).setPosition(sf::Vector2f(x, y));
+                window.draw(cells.at(cell_count));
+            }
+        }
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {

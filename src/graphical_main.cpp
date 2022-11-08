@@ -38,6 +38,8 @@ int main(void) {
                 index = 0;
             } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
+            } if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+                m.mark_cell();
             }
         }
     }

@@ -23,6 +23,7 @@ class maze {
         const coordinates& get_pos() const;
         const std::size_t& size() const;
         void update();
+        void mark_cell();
 
         int& at(coordinates c);
         const int& at(coordinates c) const;
@@ -38,6 +39,7 @@ class maze {
         coordinates m_pos;
         std::string m_message;
         std::unordered_set<coordinates, coordinates::HashFunction> m_visited_cells;
+        std::unordered_set<coordinates, coordinates::HashFunction> m_marked_cells;
 
         void generate();
         bool contains(const coordinates& c);

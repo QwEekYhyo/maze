@@ -130,6 +130,10 @@ void maze::update() {
     m_message = '\n';
 }
 
+void maze::mark_cell() {
+    m_marked_cells.insert(m_pos);
+}
+
 bool operator==(const coordinates& a, const coordinates& b) {
     return a.x == b.x && a.y == b.y;
 }
@@ -154,6 +158,8 @@ void maze::draw_on_window(sf::RenderWindow& window) {
                 cells.push_back(sf::RectangleShape(sf::Vector2f(cell_size, cell_size)));
                 if (get_pos() == c) {
                     cells.at(cell_count).setFillColor(sf::Color::Green);
+                } else if (m_marked_cells.contains(c)) {
+                    cells.at(cell_count).setFillColor(sf::Color::Red);
                 } else {
                     cells.at(cell_count).setFillColor(sf::Color::Blue);
                 }

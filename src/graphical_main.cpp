@@ -5,7 +5,7 @@ int main(void) {
     std::size_t width = 1920;
     std::size_t height = 1080;
     std::size_t index = 0;
-    std::size_t trigger = 30;
+    std::size_t trigger = 20;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "Maze");
 

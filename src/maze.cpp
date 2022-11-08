@@ -143,7 +143,8 @@ coordinates operator+(const coordinates& a, const coordinates& b) {
 }
 
 void maze::draw_on_window(sf::RenderWindow& window) {
-    float cell_size = window.getSize().y/m_size;
+    float cell_size = static_cast<float>(window.getSize().y)/static_cast<float>(m_size);
+    unsigned int offset = (window.getSize().x - m_size) / 4;
     std::vector<sf::RectangleShape> cells;
     std::size_t cell_count = 0;
     float x;
@@ -153,7 +154,7 @@ void maze::draw_on_window(sf::RenderWindow& window) {
         for (int j = 0; j < m_size; j++) {
             coordinates c = {j, i};
             if (at(c)) {
-                x = j * cell_size;
+                x = (j * cell_size) + offset;
                 y = i * cell_size;
                 cells.push_back(sf::RectangleShape(sf::Vector2f(cell_size, cell_size)));
                 if (get_pos() == c) {

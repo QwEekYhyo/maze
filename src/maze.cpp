@@ -1,7 +1,14 @@
-#include "maze.hpp"
-#include <cstdlib>
-#include <ctime>
+#include <maze.hpp>
+#include <random>
 #include <deque>
+
+int rand_int(int a, int b) {
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(a,b);
+
+    return dist6(rng);
+}
 
 std::size_t coordinates::HashFunction::operator()(const coordinates& c) const noexcept {
     size_t xHash = std::hash<int>()(c.x);
@@ -15,7 +22,6 @@ maze::maze(std::size_t size) {
 }
 
 void maze::generate() {
-    std::srand(time(NULL));
     std::deque<coordinates> stack;
     coordinates current;
     coordinates next;
@@ -23,7 +29,7 @@ void maze::generate() {
 
     m_matrix = std::vector<std::vector<int>> (m_size, std::vector<int> (m_size, 0));
 
-    int random = 2 * (std::rand() % (m_size/2));
+    int random = 2 * rand_int(0, m_size/2);
     m_pos = {random, 0};
 
     m_visited_cells.insert(m_pos);
@@ -69,7 +75,6 @@ bool maze::has_neighbor(const coordinates& pos) {
 }
 
 const coordinates maze::random_neighbor(const coordinates& pos) {
-    std::srand(time(NULL));
     int random;
     std::vector<coordinates> valid_neighbors;
     std::vector<coordinates> possible_moves = {
@@ -85,12 +90,16 @@ const coordinates maze::random_neighbor(const coordinates& pos) {
         }
     }
 
-    random = std::rand() % valid_neighbors.size();
+    random = rand_int(0, valid_neighbors.size() - 1);
     return valid_neighbors.at(random);
 }
 
 const coordinates& maze::get_pos() const {
     return m_pos;
+}
+
+const std::size_t& maze::size() const {
+    return m_size;
 }
 
 void maze::move(const coordinates& pos) {
@@ -121,12 +130,45 @@ void maze::update() {
     m_message = '\n';
 }
 
+void maze::mark_cell() {
+    m_marked_cells.insert(m_pos);
+}
+
 bool operator==(const coordinates& a, const coordinates& b) {
     return a.x == b.x && a.y == b.y;
 }
 
 coordinates operator+(const coordinates& a, const coordinates& b) {
     return {a.x + b.x, a.y + b.y};
+}
+
+void maze::draw_on_window(sf::RenderWindow& window) {
+    float cell_size = static_cast<float>(window.getSize().y)/static_cast<float>(m_size);
+    unsigned int offset = (window.getSize().x - m_size) / 4;
+    std::vector<sf::RectangleShape> cells;
+    std::size_t cell_count = 0;
+    float x;
+    float y;
+
+    for (int i = 0; i < m_size; i++) {
+        for (int j = 0; j < m_size; j++) {
+            coordinates c = {j, i};
+            if (at(c)) {
+                x = (j * cell_size) + offset;
+                y = i * cell_size;
+                cells.push_back(sf::RectangleShape(sf::Vector2f(cell_size, cell_size)));
+                if (get_pos() == c) {
+                    cells.at(cell_count).setFillColor(sf::Color::Green);
+                } else if (m_marked_cells.contains(c)) {
+                    cells.at(cell_count).setFillColor(sf::Color::Red);
+                } else {
+                    cells.at(cell_count).setFillColor(sf::Color::Blue);
+                }
+                cells.at(cell_count).setPosition(sf::Vector2f(x, y));
+                window.draw(cells.at(cell_count));
+            }
+        }
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {

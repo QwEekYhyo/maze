@@ -40,7 +40,7 @@ void maze::generate() {
         if (!at(current)) {
             at(current) = 1;
         }
-        if (has_neighbor(current)) {
+        if (nb_neighbor(current)) {
             stack.push_back(current);
             next = random_neighbor(current);
             wall = next + current;
@@ -56,7 +56,8 @@ bool maze::contains(const coordinates& c) {
     return (c.x < m_size && c.x >= 0 && c.y < m_size && c.y >= 0);
 }
 
-bool maze::has_neighbor(const coordinates& pos) {
+unsigned int maze::nb_neighbor(const coordinates& pos) {
+    unsigned int number = 0;
     std::vector<coordinates> possible_moves = {
         {2, 0},
         {-2, 0},
@@ -68,10 +69,10 @@ bool maze::has_neighbor(const coordinates& pos) {
     for (coordinates& c : possible_moves) {
         temp = c + pos;
         if (contains(temp) && ! m_visited_cells.contains(temp)) {
-            return true;
+            number++;
         }
     }
-    return false;
+    return number;
 }
 
 const coordinates maze::random_neighbor(const coordinates& pos) {
@@ -150,8 +151,8 @@ void maze::draw_on_window(sf::RenderWindow& window) {
     float x;
     float y;
 
-    for (std::size_t i = 0; i < m_size; i++) {
-        for (std::size_t j = 0; j < m_size; j++) {
+    for (int i = 0; i < m_size; i++) {
+        for (int j = 0; j < m_size; j++) {
             coordinates c = {j, i};
             if (at(c)) {
                 x = (j * cell_size) + offset;
@@ -172,8 +173,8 @@ void maze::draw_on_window(sf::RenderWindow& window) {
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {
-    for (std::size_t i = 0; i < m.m_size; i++) {
-        for (std::size_t j = 0; j < m.m_size; j++) {
+    for (int i = 0; i < m.m_size; i++) {
+        for (int j = 0; j < m.m_size; j++) {
             coordinates c = {j, i};
             if (m.get_pos() == c) {
                 os << '*';

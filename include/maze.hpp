@@ -43,7 +43,7 @@ class maze {
 
         void generate();
         bool contains(const coordinates& c);
-        bool has_neighbor(const coordinates& c);
+        unsigned int nb_neighbor(const coordinates& c);
         const coordinates random_neighbor(const coordinates& c);
 };
 

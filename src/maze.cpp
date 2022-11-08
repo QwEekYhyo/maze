@@ -150,8 +150,8 @@ void maze::draw_on_window(sf::RenderWindow& window) {
     float x;
     float y;
 
-    for (int i = 0; i < m_size; i++) {
-        for (int j = 0; j < m_size; j++) {
+    for (std::size_t i = 0; i < m_size; i++) {
+        for (std::size_t j = 0; j < m_size; j++) {
             coordinates c = {j, i};
             if (at(c)) {
                 x = (j * cell_size) + offset;
@@ -172,8 +172,8 @@ void maze::draw_on_window(sf::RenderWindow& window) {
 }
 
 std::ostream& operator<<(std::ostream& os, const maze& m) {
-    for (int i = 0; i < m.m_size; i++) {
-        for (int j = 0; j < m.m_size; j++) {
+    for (std::size_t i = 0; i < m.m_size; i++) {
+        for (std::size_t j = 0; j < m.m_size; j++) {
             coordinates c = {j, i};
             if (m.get_pos() == c) {
                 os << '*';

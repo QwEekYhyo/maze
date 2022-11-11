@@ -22,33 +22,71 @@ maze::maze(std::size_t size) {
 }
 
 void maze::generate() {
+    std::cout << m_end.x << " : " << m_end.y << '\n';
+    std::vector<coordinates> valid_ends;
+
     std::deque<coordinates> stack;
     coordinates current;
     coordinates next;
     coordinates wall;
 
+    // initialising matrix of maze with 0s everywhere
     m_matrix = std::vector<std::vector<int>> (m_size, std::vector<int> (m_size, 0));
 
+    // picking a random starting position on the top line
     int random = 2 * rand_int(0, m_size/2);
     m_pos = {random, 0};
 
+    // #### algorithm ####
+    // starts from starting position
     m_visited_cells.insert(m_pos);
     stack.push_back(m_pos);
+    //while the stack is not empty
     while (! stack.empty()) {
+        // takes last cell in stack as current cell
         current = stack.back();
         stack.pop_back();
+        // if the current cell is a 0 then makes it a 1
         if (!at(current)) {
             at(current) = 1;
         }
-        if (nb_neighbor(current)) {
+        // if current cell has at least 1 unvisited neighbor
+        if (has_neighbor(current)) {
+            // pushes the current cell to the stack
             stack.push_back(current);
+            // chooses a random neighbor
             next = random_neighbor(current);
+            // gets rid of the wall between the current cell and the choosen one
+            // (aka makes a path between the two)
             wall = next + current;
             wall = {wall.x / 2, wall.y / 2};
             at(wall) = 1;
+            // then marks the choosen cell as visited and pushes it to the stack
             m_visited_cells.insert(next);
             stack.push_back(next);
         }
+    }
+
+    // putting all of the dead ends in a set
+    for (int i = 0; i < m_size; i++) {
+        for (int j = 0; j < m_size; j++) {
+            coordinates c = {j, i};
+            if (at(c) && is_dead_end(c)) {
+                m_ends.insert(c);
+            }
+        }
+    }
+
+    // marking all ends positioned 2 third of the size of the maze as valids
+    for (coordinates c : m_ends) {
+        if (c.y >= 2 * m_size / 3) {
+            valid_ends.push_back(c);
+        }
+    }
+    // picking a random valid end as THE end
+    if (!valid_ends.empty()) {
+        random = rand_int(0, valid_ends.size());
+        m_end = valid_ends.at(random);
     }
 }
 
@@ -56,8 +94,25 @@ bool maze::contains(const coordinates& c) {
     return (c.x < m_size && c.x >= 0 && c.y < m_size && c.y >= 0);
 }
 
-unsigned int maze::nb_neighbor(const coordinates& pos) {
-    unsigned int number = 0;
+bool maze::is_dead_end(const coordinates& pos) {
+    int count = 0;
+    std::vector<coordinates> possible_moves = {
+        {1, 0},
+        {-1, 0},
+        {0, 1},
+        {0, -1}
+    };
+    for (coordinates c : possible_moves) {
+        c = c + pos;
+        if (contains(c) && at(c)) {
+            count++;
+        }
+    }
+
+    return count == 1;
+}
+
+bool maze::has_neighbor(const coordinates& pos) {
     std::vector<coordinates> possible_moves = {
         {2, 0},
         {-2, 0},
@@ -69,10 +124,10 @@ unsigned int maze::nb_neighbor(const coordinates& pos) {
     for (coordinates& c : possible_moves) {
         temp = c + pos;
         if (contains(temp) && ! m_visited_cells.contains(temp)) {
-            number++;
+            return true;
         }
     }
-    return number;
+    return false;
 }
 
 const coordinates maze::random_neighbor(const coordinates& pos) {
@@ -127,6 +182,10 @@ int& maze::operator[](coordinates pos) {
 }
 
 void maze::update() {
+    if (m_pos == m_end) {
+        m_message = "You have reached the end !!";
+        // call a win method ?
+    }
     std::cout << (*this) << std::endl;
     m_message = '\n';
 }
@@ -160,8 +219,10 @@ void maze::draw_on_window(sf::RenderWindow& window) {
                 cells.push_back(sf::RectangleShape(sf::Vector2f(cell_size, cell_size)));
                 if (get_pos() == c) {
                     cells.at(cell_count).setFillColor(sf::Color::Green);
-                } else if (m_marked_cells.contains(c)) {
+                } else if (c == m_end) {
                     cells.at(cell_count).setFillColor(sf::Color::Red);
+                } else if (m_marked_cells.contains(c)) {
+                    cells.at(cell_count).setFillColor(sf::Color::Magenta);
                 } else {
                     cells.at(cell_count).setFillColor(sf::Color::Blue);
                 }

@@ -37,13 +37,16 @@ class maze {
         std::size_t m_size;
         std::vector<std::vector<int>> m_matrix;
         coordinates m_pos;
+        coordinates m_end = {-3, -3};
         std::string m_message;
         std::unordered_set<coordinates, coordinates::HashFunction> m_visited_cells;
         std::unordered_set<coordinates, coordinates::HashFunction> m_marked_cells;
+        std::unordered_set<coordinates, coordinates::HashFunction> m_ends;
 
         void generate();
         bool contains(const coordinates& c);
-        unsigned int nb_neighbor(const coordinates& c);
+        bool is_dead_end(const coordinates& c);
+        bool has_neighbor(const coordinates& c);
         const coordinates random_neighbor(const coordinates& c);
 };
 

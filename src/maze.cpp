@@ -22,7 +22,6 @@ maze::maze(std::size_t size) {
 }
 
 void maze::generate() {
-    std::cout << m_end.x << " : " << m_end.y << '\n';
     std::vector<coordinates> valid_ends;
 
     std::deque<coordinates> stack;

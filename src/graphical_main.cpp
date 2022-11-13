@@ -1,11 +1,12 @@
 #include <maze.hpp>
 
 int main(void) {
-    maze m(30);
+    int size = 30;
+    maze m(size);
     std::size_t width = 1920;
     std::size_t height = 1080;
     std::size_t index = 0;
-    std::size_t trigger = 20;
+    std::size_t trigger = 20 + 6/size;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "Maze");
 

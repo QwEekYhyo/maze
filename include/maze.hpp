@@ -37,7 +37,7 @@ class maze {
         std::size_t m_size;
         std::vector<std::vector<int>> m_matrix;
         coordinates m_pos;
-        coordinates m_end = {-3, -3};
+        coordinates m_end{-3, -3};
         std::string m_message;
         std::unordered_set<coordinates, coordinates::HashFunction> m_visited_cells;
         std::unordered_set<coordinates, coordinates::HashFunction> m_marked_cells;
